@@ -9,9 +9,10 @@ requiredFiles = [".replit", "replit.nix", "package.json", "package-lock.json"]
 channel = "stable-24_11"
 
 [deployment]
-run = "cd svelty && npm run dev"
-deploymentTarget = "autoscale"
+deploymentTarget = "static"
 ignorePorts = false
+build = ["sh", "-c", "cd webapp && npm run build"]
+publicDir = "webapp/dist"
 
 [agent]
 expertMode = true

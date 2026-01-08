@@ -4,7 +4,7 @@
   
   const teamLayout = {
     "CCarter": ["FFunke", "CBenson", "LDyar", "MMichik", "BThomas"],
-    "CFurbush": ["SBarber", "AThomas", "KRenner", "JFlowers"],
+    "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers"],
     "JRoyer": ["CViet", "BMercer", "BBoger", "ERose", "PMcCauley", "TWilson"],
     "JWinland": ["CRouss", "DMalloy", "Sde Laet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
@@ -48,8 +48,8 @@
     submitted = true;
     showAddMore = false;
     let string_fixed = '';
-    if (string_entered.includes("Job#   Account CN#     SiteID  Sched.Date&Time         Due Date        Cust# Last Update       CUD#    Pf      City    State   Status  EQ       ")) {
-      string_fixed = string_entered.split("Job# Account CN#     SiteID  Sched.Date&Time         Due Date        Cust# Last Update       CUD#    Pf      City    State   Status  EQ       ")[1];
+    if (string_entered.includes("Job#	Account	CN#	SiteID	Sched.Date&Time 	Due Date	Cust# Last Update	CUD#	Pf	City	State	Status	EQ	 ")) {
+      string_fixed = string_entered.split("Job#	Account	CN#	SiteID	Sched.Date&Time 	Due Date	Cust# Last Update	CUD#	Pf	City	State	Status	EQ	 ")[1];
     } else {
       string_fixed = string_entered;
     }
@@ -74,13 +74,12 @@
   function getFilteredJobs() {
     let filtered = allJobs;
     if (startDate) {
-      const [year, month, day] = startDate.split('-').map(Number);
-      const start = new Date(year, month - 1, day, 0, 0, 0, 0);
+      const start = new Date(startDate);
       filtered = filtered.filter(job => job.date && job.date >= start);
     }
     if (endDate) {
-      const [year, month, day] = endDate.split('-').map(Number);
-      const end = new Date(year, month - 1, day, 23, 59, 59, 999);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
       filtered = filtered.filter(job => job.date && job.date <= end);
     }
     return filtered;
