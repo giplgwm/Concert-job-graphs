@@ -88,9 +88,13 @@
     return getTeamMembers(teamLeader).reduce((sum, pf) => sum + pf.count, 0);
   }
 
-  function getActiveTeams() {
+  function getActiveTeams(includeUnassigned = true) {
     const teams = new Set(pfCount.map(pf => pf.team));
-    return Array.from(teams);
+    const teamsArray = Array.from(teams);
+    if (!includeUnassigned) {
+      return teamsArray.filter(t => t !== "Unassigned");
+    }
+    return teamsArray;
   }
 
   function toggleFlip(team) {
@@ -150,31 +154,81 @@
     const svgElement = document.querySelector(`#pie-${team.replace(/\s+/g, '-')}`);
     if (!svgElement) return;
     
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
+    const slices = getPieSlices(team);
+    const total = getTeamTotal(team);
     
     const canvas = document.createElement('canvas');
-    canvas.width = 400;
-    canvas.height = 400;
+    canvas.width = 500;
+    canvas.height = 550;
     const ctx = canvas.getContext('2d');
     
-    const img = new Image();
-    img.onload = () => {
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, 400, 400);
-      ctx.drawImage(img, 0, 0, 400, 400);
-      URL.revokeObjectURL(url);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, 500, 550);
+    
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 20px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Team ${team} Jobs:`, 250, 35);
+    
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText(`Total: ${total} jobs`, 250, 55);
+    
+    const centerX = 250;
+    const centerY = 200;
+    const radius = 120;
+    
+    slices.forEach((slice) => {
+      const startRad = (slice.startAngle - 90) * Math.PI / 180;
+      const endRad = (slice.endAngle - 90) * Math.PI / 180;
       
-      const pngUrl = canvas.toDataURL('image/png');
-      const downloadLink = document.createElement('a');
-      downloadLink.href = pngUrl;
-      downloadLink.download = `${team}-pie-chart.png`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    };
-    img.src = url;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, startRad, endRad);
+      ctx.closePath();
+      ctx.fillStyle = slice.color;
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      const midAngle = (slice.startAngle + slice.endAngle) / 2;
+      const labelRad = (midAngle - 90) * Math.PI / 180;
+      const labelX = centerX + Math.cos(labelRad) * (radius * 0.6);
+      const labelY = centerY + Math.sin(labelRad) * (radius * 0.6);
+      
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 11px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(slice.name, labelX, labelY - 7);
+      ctx.fillText(slice.count.toString(), labelX, labelY + 7);
+    });
+    
+    let legendY = 350;
+    ctx.textAlign = 'left';
+    slices.forEach((slice) => {
+      ctx.fillStyle = slice.color;
+      ctx.fillRect(80, legendY - 8, 16, 16);
+      
+      ctx.fillStyle = '#333';
+      ctx.font = '13px system-ui, sans-serif';
+      ctx.fillText(slice.name, 105, legendY);
+      
+      ctx.fillStyle = '#4CAF50';
+      ctx.font = 'bold 13px system-ui, sans-serif';
+      ctx.fillText(`${slice.count} (${slice.percentage}%)`, 350, legendY);
+      
+      legendY += 24;
+    });
+    
+    const pngUrl = canvas.toDataURL('image/png');
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pngUrl;
+    downloadLink.download = `Team-${team}-jobs.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   }
 </script>
 
@@ -212,7 +266,7 @@
       </div>
 
       <div class="teams-grid">
-        {#each selectedTeam ? [selectedTeam] : getActiveTeams() as team (team)}
+        {#each selectedTeam ? [selectedTeam] : getActiveTeams(false) as team (team)}
           <div 
             class="team-card"
             animate:flip={{ duration: 400, easing: t => t }}
