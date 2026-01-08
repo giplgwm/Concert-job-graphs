@@ -74,6 +74,9 @@
   }
 
   function getTeamMembers(teamLeader) {
+    if (teamLeader === "Unassigned") {
+      return pfCount.filter(pf => pf.team === "Unassigned").sort((a, b) => b.count - a.count);
+    }
     const allMembers = [teamLeader, ...(teamLayout[teamLeader] || [])];
     return allMembers.map(memberName => {
       const found = pfCount.find(pf => pf.name === memberName);
@@ -140,6 +143,38 @@
       x: centerX + (radius * Math.cos(angleInRadians)),
       y: centerY + (radius * Math.sin(angleInRadians))
     };
+  }
+
+  function exportPieChart(team, event) {
+    event.stopPropagation();
+    const svgElement = document.querySelector(`#pie-${team.replace(/\s+/g, '-')}`);
+    if (!svgElement) return;
+    
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    
+    const img = new Image();
+    img.onload = () => {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 400, 400);
+      ctx.drawImage(img, 0, 0, 400, 400);
+      URL.revokeObjectURL(url);
+      
+      const pngUrl = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngUrl;
+      downloadLink.download = `${team}-pie-chart.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    };
+    img.src = url;
   }
 </script>
 
@@ -218,7 +253,7 @@
               {:else}
                 <div class="card-face" in:fly={{ x: 100, duration: 300, delay: 150 }} out:fly={{ x: -100, duration: 300 }}>
                   <div class="pie-container">
-                    <svg viewBox="0 0 200 200" class="pie-chart">
+                    <svg viewBox="0 0 200 200" class="pie-chart" id="pie-{team.replace(/\s+/g, '-')}">
                       {#each getPieSlices(team) as slice, i}
                         <path
                           d={describeArc(100, 100, 80, slice.startAngle, slice.endAngle)}
@@ -254,6 +289,9 @@
                         <span class="legend-value">{slice.count}</span>
                       </div>
                     {/each}
+                  </div>
+                  <div class="pie-actions">
+                    <button class="export-btn" onclick={(e) => exportPieChart(team, e)}>Export Chart</button>
                   </div>
                   <div class="flip-hint">Click to see table</div>
                 </div>
@@ -513,6 +551,27 @@
     font-size: 0.8rem;
     margin-top: 0.5rem;
     font-style: italic;
+  }
+
+  .pie-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .export-btn {
+    padding: 0.4rem 0.8rem;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .export-btn:hover {
+    background: #1976D2;
   }
 
   .pie-container {
