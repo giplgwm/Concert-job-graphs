@@ -3,12 +3,12 @@
   import { fly, fade, scale } from 'svelte/transition';
   
   const teamLayout = {
-    "Chris Carter": ["Fred Funke", "Chris Benson", "Lauren Dyar", "Melissa Michik", "Bridget Thomas"],
-    "Chris Furbush": ["Samantha Barber", "Abigail Thomas", "Kelly Renner", "Jamie Flowers"],
-    "James Royer": ["Chasity Viet", "Bobbie Mercer", "Brandon Boger", "Elizabeth Rose", "Payton McCauley", "Taylor Wilson"],
-    "Jennifer Winland": ["Chayne Rouss", "Darrin Malloy", "Sandra de Laet"],
-    "Christina Duckworth": ["Shawn Conaughty", "David Wells", "Megan Bethel"],
-    "Chad Mills": ["Bryan Ulan", "Jayden Spielman", "Sarah Mellott", "Liz Farnham", "Megan Marple", "Josh Mosley", "Izacc Burkett"]
+    "CCarter": ["FFunke", "CBenson", "LDyar", "MMichik", "BThomas"],
+    "CFurbush": ["SBarber", "AThomas", "KRenner", "JFlowers"],
+    "JRoyer": ["CViet", "BMercer", "BBoger", "ERose", "PMcCauley", "TWilson"],
+    "JWinland": ["CRouss", "DMalloy", "Sde Laet"],
+    "CDuckworth": ["SConaughty", "DWells", "MBethel"],
+    "CMills": ["BUlan", "JSpielman", "SMellott", "LFarnham", "MMarple", "JMosley", "IBurkett"]
   };
 
   const pfCount = $state([]);
