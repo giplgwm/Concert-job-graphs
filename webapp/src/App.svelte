@@ -100,43 +100,6 @@
   function toggleFlip(team) {
     flippedTeams[team] = !flippedTeams[team];
   }
-
-  function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-    return {
-      x: centerX + (radius * Math.cos(angleInRadians)),
-      y: centerY + (radius * Math.sin(angleInRadians))
-    };
-  }
-
-  function getPieSlices(teamLeader) {
-    const members = getTeamMembers(teamLeader).filter(m => m.count > 0);
-    const total = getTeamTotal(teamLeader);
-    let currentAngle = 0;
-    const slices = [];
-    const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', '#00BCD4', '#FFEB3B', '#795548'];
-    
-    members.forEach((member, index) => {
-      const percentage = member.count / total;
-      const angle = percentage * 360;
-      const midAngle = currentAngle + angle / 2;
-      const labelRadius = 50;
-      const labelPos = polarToCartesian(100, 100, labelRadius, midAngle);
-      slices.push({
-        name: member.name,
-        count: member.count,
-        percentage: (percentage * 100).toFixed(1),
-        startAngle: currentAngle,
-        endAngle: currentAngle + angle,
-        color: colors[index % colors.length],
-        labelX: labelPos.x,
-        labelY: labelPos.y
-      });
-      currentAngle += angle;
-    });
-    return slices;
-  }
-
 </script>
 
 <main>
@@ -180,7 +143,6 @@
               members={getTeamMembers(team)}
               total={getTeamTotal(team)}
               flipped={flippedTeams[team]}
-              slices={getPieSlices(team)}
               onFlip={() => toggleFlip(team)}
             />
           </div>

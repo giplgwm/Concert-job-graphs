@@ -2,7 +2,17 @@
   import { flip } from 'svelte/animate';
   import { fly, fade, scale } from 'svelte/transition';
 
-  let { team, members, total, flipped = false, slices = [], onFlip } = $props();
+  let { team, members, total, flipped = false, onFlip } = $props();
+
+  const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', '#00BCD4', '#FFEB3B', '#795548'];
+
+  function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
 
   function describeArc(x, y, radius, startAngle, endAngle) {
     const start = polarToCartesian(x, y, radius, endAngle);
@@ -16,13 +26,36 @@
     ].join(" ");
   }
 
-  function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-    return {
-      x: centerX + (radius * Math.cos(angleInRadians)),
-      y: centerY + (radius * Math.sin(angleInRadians))
-    };
+  function getSlices() {
+    const activeMembers = members.filter(m => m.count > 0);
+    let currentAngle = 0;
+    return activeMembers.map((member, index) => {
+      const percentage = total > 0 ? member.count / total : 0;
+      const angle = percentage * 360;
+      const midAngle = currentAngle + angle / 2;
+      const labelRadius = 50;
+      const labelPos = polarToCartesian(100, 100, labelRadius, midAngle);
+      const slice = {
+        name: member.name,
+        count: member.count,
+        percentage: (percentage * 100).toFixed(1),
+        startAngle: currentAngle,
+        endAngle: currentAngle + angle,
+        color: colors[index % colors.length],
+        labelX: labelPos.x,
+        labelY: labelPos.y
+      };
+      currentAngle += angle;
+      return slice;
+    });
   }
+
+  $effect.pre(() => {
+    members;
+    total;
+  });
+
+  let slices = $derived(getSlices());
 
   function exportPieChart(event) {
     event.stopPropagation();
