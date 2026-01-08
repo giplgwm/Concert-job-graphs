@@ -2,7 +2,7 @@
   import { flip } from 'svelte/animate';
   import { fly, fade, scale } from 'svelte/transition';
 
-  let { team, members, total, flipped = false, onFlip } = $props();
+  let { team, members, total, flipped = false, onFlip, startDate = '', endDate = '' } = $props();
 
   const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', '#00BCD4', '#FFEB3B', '#795548'];
 
@@ -57,28 +57,51 @@
 
   let slices = $derived(getSlices());
 
+  function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function getDateRangeText() {
+    if (startDate && endDate) {
+      return `${formatDateForDisplay(startDate)} - ${formatDateForDisplay(endDate)}`;
+    } else if (startDate) {
+      return `From ${formatDateForDisplay(startDate)}`;
+    } else if (endDate) {
+      return `Through ${formatDateForDisplay(endDate)}`;
+    }
+    return 'All Dates';
+  }
+
   function exportPieChart(event) {
     event.stopPropagation();
     
+    const scale = 2;
     const canvas = document.createElement('canvas');
-    canvas.width = 500;
-    canvas.height = 550;
+    canvas.width = 500 * scale;
+    canvas.height = 580 * scale;
     const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
     
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, 500, 550);
+    ctx.fillRect(0, 0, 500, 580);
     
     ctx.fillStyle = '#333';
     ctx.font = 'bold 20px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`Team ${team} Jobs:`, 250, 35);
+    ctx.fillText(`Team ${team} Jobs:`, 250, 30);
     
     ctx.font = '14px system-ui, sans-serif';
     ctx.fillStyle = '#666';
-    ctx.fillText(`Total: ${total} jobs`, 250, 55);
+    ctx.fillText(`Total: ${total} jobs`, 250, 50);
+    
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = '#2196F3';
+    ctx.fillText(getDateRangeText(), 250, 70);
     
     const centerX = 250;
-    const centerY = 200;
+    const centerY = 210;
     const radius = 120;
     
     slices.forEach((slice) => {
@@ -108,7 +131,7 @@
       ctx.fillText(slice.count.toString(), labelX, labelY + 7);
     });
     
-    let legendY = 350;
+    let legendY = 365;
     ctx.textAlign = 'left';
     slices.forEach((slice) => {
       ctx.fillStyle = slice.color;

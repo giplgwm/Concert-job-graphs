@@ -211,6 +211,8 @@
               total={getTeamTotal(team)}
               flipped={flippedTeams[team]}
               onFlip={() => toggleFlip(team)}
+              {startDate}
+              {endDate}
             />
           </div>
         {/each}
