@@ -74,7 +74,11 @@
   }
 
   function getTeamMembers(teamLeader) {
-    return pfCount.filter(pf => pf.team === teamLeader);
+    const allMembers = [teamLeader, ...(teamLayout[teamLeader] || [])];
+    return allMembers.map(memberName => {
+      const found = pfCount.find(pf => pf.name === memberName);
+      return found || { name: memberName, count: 0, team: teamLeader };
+    }).sort((a, b) => b.count - a.count);
   }
 
   function getTeamTotal(teamLeader) {
@@ -91,7 +95,7 @@
   }
 
   function getPieSlices(teamLeader) {
-    const members = getTeamMembers(teamLeader);
+    const members = getTeamMembers(teamLeader).filter(m => m.count > 0);
     const total = getTeamTotal(teamLeader);
     let currentAngle = 0;
     const slices = [];
@@ -100,13 +104,18 @@
     members.forEach((member, index) => {
       const percentage = member.count / total;
       const angle = percentage * 360;
+      const midAngle = currentAngle + angle / 2;
+      const labelRadius = 50;
+      const labelPos = polarToCartesian(100, 100, labelRadius, midAngle);
       slices.push({
         name: member.name,
         count: member.count,
         percentage: (percentage * 100).toFixed(1),
         startAngle: currentAngle,
         endAngle: currentAngle + angle,
-        color: colors[index % colors.length]
+        color: colors[index % colors.length],
+        labelX: labelPos.x,
+        labelY: labelPos.y
       });
       currentAngle += angle;
     });
@@ -218,6 +227,19 @@
                         >
                           <title>{slice.name}: {slice.count} ({slice.percentage}%)</title>
                         </path>
+                      {/each}
+                      {#each getPieSlices(team) as slice, i}
+                        <text 
+                          x={slice.labelX} 
+                          y={slice.labelY} 
+                          class="pie-label"
+                          text-anchor="middle"
+                          dominant-baseline="middle"
+                          in:fade={{ duration: 300, delay: 200 + i * 50 }}
+                        >
+                          <tspan x={slice.labelX} dy="-0.4em">{slice.name}</tspan>
+                          <tspan x={slice.labelX} dy="1.1em">{slice.count}</tspan>
+                        </text>
                       {/each}
                     </svg>
                   </div>
@@ -514,6 +536,14 @@
 
   .pie-chart path:hover {
     transform: scale(1.05);
+  }
+
+  .pie-label {
+    font-size: 8px;
+    font-weight: 600;
+    fill: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    pointer-events: none;
   }
 
   .legend {
