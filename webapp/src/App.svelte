@@ -194,6 +194,107 @@
       return slice;
     });
   }
+
+  function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function getDateRangeText() {
+    if (startDate && endDate) {
+      return `${formatDateForDisplay(startDate)} - ${formatDateForDisplay(endDate)}`;
+    } else if (startDate) {
+      return `From ${formatDateForDisplay(startDate)}`;
+    } else if (endDate) {
+      return `Through ${formatDateForDisplay(endDate)}`;
+    }
+    return 'All Dates';
+  }
+
+  function exportTeamDistribution() {
+    const slices = getTeamSlices();
+    const total = getTotalJobs();
+    
+    const scale = 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = 500 * scale;
+    canvas.height = 580 * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, 500, 580);
+    
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 20px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Team Distribution:', 250, 30);
+    
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText(`Total: ${total} jobs`, 250, 50);
+    
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillStyle = '#2196F3';
+    ctx.fillText(getDateRangeText(), 250, 70);
+    
+    const centerX = 250;
+    const centerY = 210;
+    const radius = 120;
+    
+    slices.forEach((slice) => {
+      const startRad = (slice.startAngle - 90) * Math.PI / 180;
+      const endRad = (slice.endAngle - 90) * Math.PI / 180;
+      
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, startRad, endRad);
+      ctx.closePath();
+      ctx.fillStyle = slice.color;
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      const midAngle = (slice.startAngle + slice.endAngle) / 2;
+      const labelRad = (midAngle - 90) * Math.PI / 180;
+      const labelX = centerX + Math.cos(labelRad) * (radius * 0.6);
+      const labelY = centerY + Math.sin(labelRad) * (radius * 0.6);
+      
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 11px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(slice.name, labelX, labelY - 7);
+      ctx.fillText(slice.count.toString(), labelX, labelY + 7);
+    });
+    
+    let legendY = 365;
+    ctx.textAlign = 'left';
+    slices.forEach((slice) => {
+      ctx.fillStyle = slice.color;
+      ctx.fillRect(80, legendY - 8, 16, 16);
+      
+      ctx.fillStyle = '#333';
+      ctx.font = '13px system-ui, sans-serif';
+      ctx.fillText(slice.name, 105, legendY);
+      
+      ctx.fillStyle = '#4CAF50';
+      ctx.font = 'bold 13px system-ui, sans-serif';
+      ctx.fillText(`${slice.count} (${slice.percentage}%)`, 350, legendY);
+      
+      legendY += 24;
+    });
+    
+    const pngUrl = canvas.toDataURL('image/png');
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pngUrl;
+    downloadLink.download = 'Team-Distribution.png';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
 </script>
 
 <main>
@@ -231,7 +332,10 @@
       </div>
 
       <div class="team-overview">
-        <h3>Team Distribution</h3>
+        <div class="overview-header">
+          <h3>Team Distribution</h3>
+          <button class="export-btn" onclick={exportTeamDistribution}>Export Chart</button>
+        </div>
         <div class="overview-content">
           <svg viewBox="0 0 200 200" class="overview-pie">
             {#each getTeamSlices() as slice}
@@ -431,12 +535,34 @@
     padding: 1rem;
   }
 
+  .overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #4CAF50;
+  }
+
   .team-overview h3 {
-    margin: 0 0 1rem 0;
+    margin: 0;
     color: #333;
     font-size: 1.1rem;
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 0.5rem;
+  }
+
+  .team-overview .export-btn {
+    padding: 0.4rem 0.8rem;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .team-overview .export-btn:hover {
+    background: #1976D2;
   }
 
   .overview-content {
