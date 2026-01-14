@@ -48,8 +48,8 @@
     submitted = true;
     showAddMore = false;
     let string_fixed = '';
-    if (string_entered.includes("Job#	Account	CN#	SiteID	Sched.Date&Time 	Due Date	Cust# Last Update	CUD#	Pf	City	State	Status	EQ	 ")) {
-      string_fixed = string_entered.split("Job#	Account	CN#	SiteID	Sched.Date&Time 	Due Date	Cust# Last Update	CUD#	Pf	City	State	Status	EQ	 ")[1];
+    if (string_entered.includes("Job#   Account CN#     SiteID  Sched.Date&Time         Due Date        Cust# Last Update       CUD#    Pf      City    State   Status  EQ       ")) {
+      string_fixed = string_entered.split("Job# Account CN#     SiteID  Sched.Date&Time         Due Date        Cust# Last Update       CUD#    Pf      City    State   Status  EQ       ")[1];
     } else {
       string_fixed = string_entered;
     }
@@ -115,14 +115,11 @@
   }
 
   function getTotalJobs() {
-    return getPfCount().reduce((sum, pf) => sum + pf.count, 0);
+    return getPfCount().filter(pf => pf.team !== "Unassigned").reduce((sum, pf) => sum + pf.count, 0);
   }
 
   function getTeamMembers(teamLeader) {
     const pfCount = getPfCount();
-    if (teamLeader === "Unassigned") {
-      return pfCount.filter(pf => pf.team === "Unassigned").sort((a, b) => b.count - a.count);
-    }
     const allMembers = [teamLeader, ...(teamLayout[teamLeader] || [])];
     return allMembers.map(memberName => {
       const found = pfCount.find(pf => pf.name === memberName);
@@ -134,18 +131,68 @@
     return getTeamMembers(teamLeader).reduce((sum, pf) => sum + pf.count, 0);
   }
 
-  function getActiveTeams(includeUnassigned = true) {
-    const pfCount = getPfCount();
-    const teams = new Set(pfCount.map(pf => pf.team));
-    const teamsArray = Array.from(teams);
-    if (!includeUnassigned) {
-      return teamsArray.filter(t => t !== "Unassigned");
-    }
-    return teamsArray;
+  function getActiveTeams() {
+    return Object.keys(teamLayout).filter(team => getTeamTotal(team) > 0);
+  }
+
+  function getTeamBreakdown() {
+    const total = getTotalJobs();
+    return Object.keys(teamLayout).map(team => ({
+      name: team,
+      count: getTeamTotal(team),
+      percentage: total > 0 ? ((getTeamTotal(team) / total) * 100).toFixed(1) : 0
+    })).filter(t => t.count > 0).sort((a, b) => b.count - a.count);
   }
 
   function toggleFlip(team) {
     flippedTeams[team] = !flippedTeams[team];
+  }
+
+  const teamColors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', '#00BCD4'];
+
+  function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
+
+  function describeArc(x, y, radius, startAngle, endAngle) {
+    const start = polarToCartesian(x, y, radius, endAngle);
+    const end = polarToCartesian(x, y, radius, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    return [
+      "M", x, y,
+      "L", start.x, start.y,
+      "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+      "Z"
+    ].join(" ");
+  }
+
+  function getTeamSlices() {
+    const breakdown = getTeamBreakdown();
+    const total = getTotalJobs();
+    let currentAngle = 0;
+    return breakdown.map((team, index) => {
+      const percentage = total > 0 ? team.count / total : 0;
+      const angle = percentage * 360;
+      const midAngle = currentAngle + angle / 2;
+      const labelRadius = 50;
+      const labelPos = polarToCartesian(100, 100, labelRadius, midAngle);
+      const slice = {
+        name: team.name,
+        count: team.count,
+        percentage: team.percentage,
+        startAngle: currentAngle,
+        endAngle: currentAngle + angle,
+        color: teamColors[index % teamColors.length],
+        labelX: labelPos.x,
+        labelY: labelPos.y
+      };
+      currentAngle += angle;
+      return slice;
+    });
   }
 </script>
 
@@ -176,11 +223,36 @@
       
       <div class="summary">
         <span class="total">Total Jobs: <strong>{getTotalJobs()}</strong></span>
-        <span class="workers">Workers: <strong>{getPfCount().length}</strong></span>
+        <span class="workers">Workers: <strong>{getPfCount().filter(pf => pf.team !== "Unassigned").length}</strong></span>
         <span class="teams">Teams: <strong>{getActiveTeams().length}</strong></span>
         {#if startDate || endDate}
-          <span class="filtered">(Filtered from {allJobs.length} total)</span>
+          <span class="filtered">(Filtered by date)</span>
         {/if}
+      </div>
+
+      <div class="team-overview">
+        <h3>Team Distribution</h3>
+        <div class="overview-content">
+          <svg viewBox="0 0 200 200" class="overview-pie">
+            {#each getTeamSlices() as slice}
+              <path
+                d={describeArc(100, 100, 80, slice.startAngle, slice.endAngle)}
+                fill={slice.color}
+              >
+                <title>{slice.name}: {slice.count} ({slice.percentage}%)</title>
+              </path>
+            {/each}
+          </svg>
+          <div class="overview-legend">
+            {#each getTeamSlices() as slice}
+              <div class="overview-legend-item">
+                <span class="legend-color" style="background: {slice.color}"></span>
+                <span class="legend-name">{slice.name}</span>
+                <span class="legend-value">{slice.count} ({slice.percentage}%)</span>
+              </div>
+            {/each}
+          </div>
+        </div>
       </div>
 
       <div class="team-filter">
@@ -203,7 +275,7 @@
       </div>
 
       <div class="teams-grid">
-        {#each selectedTeam ? [selectedTeam] : getActiveTeams(false) as team (team)}
+        {#each selectedTeam ? [selectedTeam] : getActiveTeams() as team (team)}
           <div animate:flip={{ duration: 400, easing: t => t }}>
             <TeamCard
               {team}
@@ -350,6 +422,76 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1.5rem;
+  }
+
+  .team-overview {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  .team-overview h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 0.5rem;
+  }
+
+  .overview-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .overview-pie {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+  }
+
+  .overview-pie path {
+    stroke: white;
+    stroke-width: 2;
+    transition: transform 0.2s;
+    transform-origin: center;
+  }
+
+  .overview-pie path:hover {
+    transform: scale(1.05);
+  }
+
+  .overview-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .overview-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .overview-legend-item .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .overview-legend-item .legend-name {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .overview-legend-item .legend-value {
+    font-weight: 600;
+    color: #4CAF50;
   }
 
   .header-buttons {
