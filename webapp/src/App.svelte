@@ -427,42 +427,58 @@
     gap: 1rem;
     max-width: 800px;
     margin: 0 auto;
+    background: rgba(30, 30, 40, 0.8);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
   }
   
   h2 {
     margin: 0 0 1rem 0;
-    color: #333;
+    color: #f4f4f5;
+    font-weight: 600;
   }
   
   textarea {
     width: 100%;
     min-height: 300px;
     padding: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-family: monospace;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    font-family: 'SF Mono', Monaco, monospace;
     font-size: 0.9rem;
     resize: vertical;
+    background: rgba(0, 0, 0, 0.3);
+    color: #e4e4e7;
+  }
+  
+  textarea::placeholder {
+    color: #71717a;
   }
   
   textarea:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
   }
   
   .load-btn, .reset-btn {
     padding: 0.75rem 1.5rem;
-    background: #4CAF50;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   }
   
   .load-btn:hover, .reset-btn:hover {
-    background: #45a049;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
   }
   
   .results {
@@ -476,6 +492,10 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  .header h2 {
+    margin: 0;
+  }
   
   .reset-btn {
     padding: 0.5rem 1rem;
@@ -485,15 +505,17 @@
   .summary {
     display: flex;
     gap: 2rem;
-    padding: 1rem;
-    background: #f5f5f5;
-    border-radius: 8px;
+    padding: 1.25rem;
+    background: rgba(30, 30, 40, 0.8);
+    border-radius: 12px;
     font-size: 1.1rem;
     flex-wrap: wrap;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
   }
   
   .summary strong {
-    color: #4CAF50;
+    color: #22c55e;
   }
 
   .team-filter {
@@ -504,22 +526,25 @@
 
   .filter-btn {
     padding: 0.5rem 1rem;
-    background: #fff;
-    border: 2px solid #ddd;
+    background: rgba(30, 30, 40, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.9rem;
+    color: #a1a1aa;
   }
 
   .filter-btn:hover {
-    border-color: #4CAF50;
+    border-color: #22c55e;
+    color: #22c55e;
   }
 
   .filter-btn.active {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
-    border-color: #4CAF50;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   }
 
   .teams-grid {
@@ -529,10 +554,11 @@
   }
 
   .team-overview {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 1rem;
+    background: rgba(30, 30, 40, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
   }
 
   .overview-header {
@@ -540,29 +566,33 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.3);
   }
 
   .team-overview h3 {
     margin: 0;
-    color: #333;
+    color: #f4f4f5;
     font-size: 1.1rem;
+    font-weight: 600;
   }
 
   .team-overview .export-btn {
-    padding: 0.4rem 0.8rem;
-    background: #2196F3;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 
   .team-overview .export-btn:hover {
-    background: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
   }
 
   .overview-content {
@@ -579,7 +609,7 @@
   }
 
   .overview-pie path {
-    stroke: white;
+    stroke: rgba(15, 15, 17, 0.8);
     stroke-width: 2;
     transition: transform 0.2s;
     transform-origin: center;
@@ -601,23 +631,25 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
+    color: #a1a1aa;
   }
 
   .overview-legend-item .legend-color {
     width: 14px;
     height: 14px;
-    border-radius: 3px;
+    border-radius: 4px;
     flex-shrink: 0;
   }
 
   .overview-legend-item .legend-name {
     flex: 1;
     font-weight: 500;
+    color: #e4e4e7;
   }
 
   .overview-legend-item .legend-value {
     font-weight: 600;
-    color: #4CAF50;
+    color: #22c55e;
   }
 
   .header-buttons {
@@ -627,17 +659,20 @@
 
   .add-btn {
     padding: 0.5rem 1rem;
-    background: #2196F3;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 
   .add-btn:hover {
-    background: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
   }
 
   .date-filter {
@@ -646,8 +681,9 @@
     align-items: center;
     flex-wrap: wrap;
     padding: 1rem;
-    background: #e3f2fd;
-    border-radius: 8px;
+    background: rgba(30, 30, 40, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .date-filter label {
@@ -655,37 +691,49 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
+    color: #a1a1aa;
   }
 
   .date-filter input[type="date"] {
-    padding: 0.4rem 0.6rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
     font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: #e4e4e7;
+    color-scheme: dark;
+  }
+
+  .date-filter input[type="date"]:focus {
+    outline: none;
+    border-color: #22c55e;
   }
 
   .clear-filter-btn {
-    padding: 0.4rem 0.8rem;
-    background: #ff5722;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.85rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
   }
 
   .clear-filter-btn:hover {
-    background: #e64a19;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
   }
 
   .filtered {
-    color: #666;
+    color: #71717a;
     font-style: italic;
   }
 
   .add-info {
-    color: #666;
+    color: #a1a1aa;
     margin: 0;
     font-size: 0.95rem;
   }
@@ -697,16 +745,17 @@
 
   .cancel-btn {
     padding: 0.75rem 1.5rem;
-    background: #9e9e9e;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #a1a1aa;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
   }
 
   .cancel-btn:hover {
-    background: #757575;
+    background: rgba(255, 255, 255, 0.15);
+    color: #e4e4e7;
   }
 </style>

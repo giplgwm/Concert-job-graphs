@@ -246,20 +246,22 @@
 
 <style>
   .team-card {
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background: white;
-    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(30, 30, 40, 0.8);
+    padding: 1.25rem;
     cursor: pointer;
     min-height: 380px;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
   }
 
   .team-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    border-color: rgba(34, 197, 94, 0.3);
   }
 
   .card-content {
@@ -279,30 +281,33 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.3);
   }
 
   .team-header h3 {
     margin: 0;
-    color: #333;
+    color: #f4f4f5;
     font-size: 1.1rem;
+    font-weight: 600;
   }
 
   .team-total {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.85rem;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   }
   
   .table-container {
     flex: 1;
     overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
   }
   
   table {
@@ -311,7 +316,7 @@
   }
   
   thead {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
     position: sticky;
     top: 0;
@@ -325,11 +330,11 @@
   }
   
   tbody tr {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
   
   tbody tr:hover {
-    background: #f9f9f9;
+    background: rgba(255, 255, 255, 0.05);
   }
   
   tbody tr:last-child {
@@ -339,12 +344,13 @@
   td {
     padding: 0.5rem 0.75rem;
     font-size: 0.9rem;
+    color: #e4e4e7;
   }
   
   .rank {
     width: 40px;
     text-align: center;
-    color: #888;
+    color: #71717a;
     font-weight: 500;
   }
   
@@ -356,18 +362,18 @@
     width: 60px;
     text-align: center;
     font-weight: 600;
-    color: #4CAF50;
+    color: #22c55e;
   }
   
   .percentage {
     width: 60px;
     text-align: center;
-    color: #666;
+    color: #a1a1aa;
   }
 
   .flip-hint {
     text-align: center;
-    color: #999;
+    color: #71717a;
     font-size: 0.8rem;
     margin-top: 0.5rem;
     font-style: italic;
@@ -380,18 +386,21 @@
   }
 
   .export-btn {
-    padding: 0.4rem 0.8rem;
-    background: #2196F3;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 
   .export-btn:hover {
-    background: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
   }
 
   .pie-container {
@@ -407,7 +416,7 @@
   }
 
   .pie-chart path {
-    stroke: white;
+    stroke: rgba(15, 15, 17, 0.8);
     stroke-width: 2;
     transition: transform 0.2s;
     transform-origin: center;
@@ -421,7 +430,7 @@
     font-size: 8px;
     font-weight: 600;
     fill: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
     pointer-events: none;
   }
 
@@ -439,12 +448,13 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.85rem;
+    color: #a1a1aa;
   }
 
   .legend-color {
     width: 12px;
     height: 12px;
-    border-radius: 2px;
+    border-radius: 3px;
     flex-shrink: 0;
   }
 
@@ -453,10 +463,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #e4e4e7;
   }
 
   .legend-value {
     font-weight: 600;
-    color: #4CAF50;
+    color: #22c55e;
   }
 </style>
