@@ -5,10 +5,10 @@
   const teamLayout = {
     "CCarter": ["FFunke", "CBenson", "LDyar", "MMichik", "BThomas"],
     "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers"],
-    "JRoyer": ["CViet", "BMercer", "BBoger", "ERose", "PMcCauley", "TWilson"],
+    "JRoyer": ["CViet", "BMercer", "BBoger", "ERose", "PMcCauley", "TWilson", "SMellott"],
     "JWinland": ["CRouss", "DMalloy", "Sde Laet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
-    "CMills": ["BUlan", "JSpielman", "SMellott", "LFarnham", "MMarple", "JMosley", "IBurkett"]
+    "CMills": ["BUlan", "JSpielman", "LFarnham", "MMarple", "JMosley", "IBurkett"]
   };
 
   let allJobs = $state([]);
