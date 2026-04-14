@@ -6,9 +6,10 @@
     "CCarter": ["FFunke", "CBenson", "LDyar", "MMichik", "BThomas"],
     "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers"],
     "JRoyer": ["CViet", "BMercer", "BBoger", "ERose", "PMcCauley", "TWilson", "SMellott"],
-    "JWinland": ["CRouss", "DMalloy", "Sde Laet"],
+    "JWinland": ["CRouss", "DMalloy", "SdeLaet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
-    "CMills": ["BUlan", "JSpielman", "LFarnham", "MMarple", "JMosley", "IBurkett"]
+    "CMills": ["BUlan", "JSpielman", "MMarple", "IBurkett"],
+    "ISW": ["ABerry","JScott","AGrant","GVider","JJenkins","SNavarro","TKennedy","JMosley","KLowe","AReynoso","CLow","SGordy","JKing","SJobin","OKaiser"]
   };
 
   let allJobs = $state([]);
