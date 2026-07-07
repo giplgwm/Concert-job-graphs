@@ -10,7 +10,8 @@
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
     "CMills": ["BUlan", "JSpielman", "MMarple", "IBurkett"],
     "ISW": ["ABerry","JScott","AGrant","GVider","JJenkins","SNavarro","TKennedy","JMosley","KLowe","AReynoso","CLow","SGordy","JKing","SJobin","OKaiser"],
-    "RBammann": ["AViakley", "CJackson", "JBullett", "LFarnham", "KConnolly", "KMatzinger", "RFlythe", "SMiller"]
+    "RBammann": ["AViakley", "CJackson", "JBullett", "LFarnham", "KConnolly", "KMatzinger", "RFlythe", "SMiller"],
+    "BBarbour": ["EZupko", "DHeleine", "KBrackett", "MCerrito", "TShowe"]
   };
 
   let allJobs = $state([]);
