@@ -3,13 +3,13 @@
   import TeamCard from './lib/TeamCard.svelte';
   
   const teamLayout = {
-    "CCarter": ["FFunke", "CBenson", "LDyar", "MMichik", "BThomas"],
+    "CCarter": ["FFunke", "LDyar", "MMichik", "BThomas"],
     "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers"],
-    "JRoyer": ["CViet", "BBoger", "ERose", "PMcCauley", "TWilson", "SMellott"],
+    "JRoyer": ["CViet", "BBoger", "ERose", "CBenson", "SMellott"],
     "JWinland": ["CRouss", "DMalloy", "SdeLaet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
-    "CMills": ["BUlan", "JSpielman", "IBurkett"],
-    "ISW": ["ABerry","JScott","GVider","JJenkins","SNavarro","JMosley","KLowe","AReynoso","SGordy","JKing","BMercer", "SJohnston", "SChristian"],
+    "CMills": ["BUlan", "JSpielman", "IBurkett", "TWilson"],
+    "ISW": ["ABerry","JScott","GVider","JJenkins","JMosley","KLowe","AReynoso","SGordy","JKing","BMercer", "SJohnston", "SChristian"],
     "RBammann": ["AViakley", "CJackson", "JBullett", "LFarnham", "KConnolly", "KMatzinger", "RFlythe", "SMiller"],
     "BBarbour": ["EZupko", "DHeleine", "KBrackett", "MCerrito", "TShowe", "MMarple"]
   };
