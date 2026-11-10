@@ -4,7 +4,7 @@
   
   const teamLayout = {
     "CCarter": ["FFunke", "LDyar", "MCuthrell", "BThomas"],
-    "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers", SDeLaet],
+    "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers", "SDeLaet", "JBall"],
     "JRoyer": ["CViet", "BBoger", "ERose", "CBenson", "SMellott"],
     "JWinland": ["CRouss", "DMalloy", "SdeLaet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
