@@ -3,15 +3,15 @@
   import TeamCard from './lib/TeamCard.svelte';
   
   const teamLayout = {
-    "CCarter": ["FFunke", "LDyar", "MMichik", "BThomas"],
-    "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers"],
+    "CCarter": ["FFunke", "LDyar", "MCuthrell", "BThomas"],
+    "CFurbush": ["SBarber", "ATaylor", "KRenner", "JFlowers", SDeLaet],
     "JRoyer": ["CViet", "BBoger", "ERose", "CBenson", "SMellott"],
     "JWinland": ["CRouss", "DMalloy", "SdeLaet"],
     "CDuckworth": ["SConaughty", "DWells", "MBethel"],
-    "CMills": ["BUlan", "JSpielman", "IBurkett", "TWilson"],
-    "ISW": ["ABerry","JScott","GVider","JJenkins","JMosley","KLowe","AReynoso","SGordy","JKing","BMercer", "SJohnston", "SChristian"],
+    "CMills": ["BUlan", "JSpielman", "TWilson"],
+    "ISW": ["ABerry","JScott","GVider","JJenkins","JMosley","KLowe","AReynoso","SGordy","JKing","BMercer", "AOlson"],
     "RBammann": ["AViakley", "CJackson", "JBullett", "LFarnham", "KConnolly", "KMatzinger", "RFlythe", "SMiller"],
-    "BBarbour": ["EZupko", "DHeleine", "KBrackett", "MCerrito", "TShowe", "MMarple"]
+    "BBarbour": ["EZupko", "DHeleine", "KBrackett", "MCerrito", "AJohnson", "MMarple"]
   };
 
   let allJobs = $state([]);
